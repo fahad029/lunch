@@ -9,37 +9,26 @@
 <link href="https://fonts.googleapis.com/css2?family=Baloo+2:ital,wght@0,500;0,600;0,700;0,800;1,800&family=Manrope:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
 <style>
   :root{
-    --navy:#123655;
-    --navy-deep:#0c2740;
-    --steel:#EDF3F6;
-    --steel-line:#D3E0E7;
-    --gold:#F8B810; /* Adjusted to match flyer's bright yellow */
-    --gold-deep:#E8A33D;
-    --leaf:#3E8F5C;
-    --leaf-deep:#2E6E45;
+    --navy:#123655; --navy-deep:#0c2740;
+    --steel:#EDF3F6; --steel-line:#D3E0E7;
+    --gold:#F8B810; --gold-deep:#E8A33D;
+    --leaf:#3E8F5C; --leaf-deep:#2E6E45;
     --chili:#D8503A;
-    --whatsapp:#25D366;
-    --whatsapp-deep:#1DA851;
-    --cream:#FAF9F6;
-    --ink:#16324F;
-    --ink-soft:#4C6478;
+    --whatsapp:#25D366; --whatsapp-deep:#1DA851;
+    --cream:#FAF9F6; --ink:#16324F; --ink-soft:#4C6478;
     --white:#FFFFFF;
     --radius:18px;
     --shadow:0 16px 40px -12px rgba(18,54,85,0.15);
     --font-display:'Baloo 2', system-ui, sans-serif;
     --font-body:'Manrope', system-ui, sans-serif;
     --font-mono:'JetBrains Mono', monospace;
-    --transition-smooth: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    --transition-smooth: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
   }
   *{box-sizing:border-box;}
   html{scroll-behavior:smooth;}
   body{
-    margin:0;
-    font-family:var(--font-body);
-    color:var(--ink);
-    background:var(--cream);
-    -webkit-font-smoothing:antialiased;
-    overflow-x: hidden;
+    margin:0; font-family:var(--font-body); color:var(--ink);
+    background:var(--cream); -webkit-font-smoothing:antialiased; overflow-x: hidden;
   }
   img,svg{display:block;max-width:100%;}
   a{color:inherit;text-decoration:none;}
@@ -47,55 +36,40 @@
   .wrap{max-width:1180px;margin:0 auto;padding:0 24px;}
   h1,h2,h3{font-family:var(--font-display);margin:0;line-height:1.08;color:var(--navy-deep);}
   .eyebrow{
-    font-family:var(--font-mono);
-    font-size:12.5px;
-    letter-spacing:.14em;
-    text-transform:uppercase;
-    color:var(--leaf-deep);
-    font-weight:600;
-    display:inline-flex;
-    align-items:center;
-    gap:8px;
+    font-family:var(--font-mono); font-size:12.5px; letter-spacing:.14em;
+    text-transform:uppercase; color:var(--leaf-deep); font-weight:600;
+    display:inline-flex; align-items:center; gap:8px;
   }
   .eyebrow::before{content:"";width:18px;height:2px;background:var(--gold);border-radius:2px;}
   p{margin:0;}
-  .visually-hidden{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);}
-  :focus-visible{outline:3px solid var(--gold-deep);outline-offset:3px;border-radius:6px;}
 
-  /* ---------- PROGRESS BAR ---------- */
+  /* UI Enhancements: Scroll Progress & Toast */
   #scroll-progress {
     position: fixed; top: 0; left: 0; width: 0%; height: 4px;
-    background: var(--gold-deep); z-index: 100; transition: width 0.1s ease-out;
+    background: linear-gradient(90deg, var(--gold), var(--chili)); z-index: 100; transition: width 0.1s ease-out;
   }
+  #toast {
+    visibility: hidden; min-width: 280px; background-color: var(--leaf-deep);
+    color: #fff; text-align: center; border-radius: 12px; padding: 16px 24px;
+    position: fixed; z-index: 1000; left: 50%; bottom: 30px; font-weight: 700;
+    transform: translateX(-50%) translateY(20px); opacity: 0; transition: var(--transition-smooth);
+    box-shadow: 0 10px 30px rgba(46,110,69,0.4); display: flex; align-items: center; justify-content: center; gap: 10px;
+  }
+  #toast.show { visibility: visible; transform: translateX(-50%) translateY(0); opacity: 1; }
 
-  /* ---------- SCROLL REVEAL UTILITY ---------- */
-  .reveal {
-    opacity: 0;
-    transform: translateY(30px);
-    transition: var(--transition-smooth);
-    transition-duration: 0.8s;
-  }
-  .reveal.active {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  /* Animations */
+  .reveal { opacity: 0; transform: translateY(40px); transition: var(--transition-smooth); transition-duration: 0.8s; }
+  .reveal.active { opacity: 1; transform: translateY(0); }
+  @keyframes gradientShift { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
+  @keyframes shimmer { 0% { background-position: -200% 0; } 100% { background-position: 200% 0; } }
 
-  /* ---------- NAV ---------- */
+  /* Nav */
   header.site-nav{
-    position:sticky;top:0;z-index:60;
-    background:rgba(250,249,246,0.85);
-    backdrop-filter:blur(16px);
-    border-bottom:1px solid transparent;
-    transition: var(--transition-smooth);
+    position:sticky;top:0;z-index:60; background:rgba(250,249,246,0.85);
+    backdrop-filter:blur(16px); border-bottom:1px solid transparent; transition: var(--transition-smooth);
   }
-  header.site-nav.scrolled {
-    border-bottom:1px solid var(--steel-line);
-    box-shadow: 0 4px 20px rgba(0,0,0,0.04);
-  }
-  .nav-inner{
-    display:flex;align-items:center;justify-content:space-between;
-    padding:14px 24px;max-width:1180px;margin:0 auto;
-  }
+  header.site-nav.scrolled { border-bottom:1px solid var(--steel-line); box-shadow: 0 4px 30px rgba(0,0,0,0.05); }
+  .nav-inner{ display:flex;align-items:center;justify-content:space-between; padding:14px 24px;max-width:1180px;margin:0 auto; }
   .brand{display:flex;align-items:center;gap:10px; transition: transform 0.2s;}
   .brand:hover { transform: scale(1.02); }
   .brand .logo-mark{width:46px;height:46px;flex-shrink:0;}
@@ -105,28 +79,19 @@
   nav.links a{font-weight:700;font-size:14.5px;color:var(--ink-soft);transition:color .2s;}
   nav.links a:hover{color:var(--gold-deep);}
   .nav-cta{
-    display:flex;align-items:center;gap:8px;
-    background:var(--whatsapp);color:white;
-    padding:10px 18px;border-radius:999px;font-weight:700;font-size:14px;
-    box-shadow:0 8px 18px -8px rgba(37,211,102,.55);
+    display:flex;align-items:center;gap:8px; background:var(--whatsapp);color:white;
+    padding:10px 18px;border-radius:999px;font-weight:700;font-size:14px; box-shadow:0 8px 18px -8px rgba(37,211,102,.55);
     transition: var(--transition-smooth);
   }
-  .nav-cta:hover{
-    transform:translateY(-2px) scale(1.03);
-    box-shadow:0 12px 24px -8px rgba(37,211,102,.8);
-    color: white;
-  }
+  .nav-cta:hover{ transform:translateY(-2px) scale(1.03); box-shadow:0 12px 24px -8px rgba(37,211,102,.8); color: white; }
   .nav-cta svg{width:18px;height:18px;}
   .burger{display:none;background:none;border:0;padding:8px; cursor: pointer;}
   .burger svg{width:26px;height:26px;color:var(--navy-deep);}
   #nav-toggle{display:none;}
-
   @media (max-width:860px){
     nav.links{
-      position:absolute;top:100%;left:0;right:0;
-      background:rgba(250,249,246,0.98);backdrop-filter:blur(10px);
-      border-bottom:1px solid var(--steel-line);
-      flex-direction:column;align-items:flex-start;gap:0;
+      position:absolute;top:100%;left:0;right:0; background:rgba(250,249,246,0.98);backdrop-filter:blur(10px);
+      border-bottom:1px solid var(--steel-line); flex-direction:column;align-items:flex-start;gap:0;
       max-height:0;overflow:hidden;transition:max-height .3s ease-in-out;
     }
     #nav-toggle:checked ~ nav.links{max-height:400px; box-shadow: 0 10px 20px rgba(0,0,0,0.05);}
@@ -135,43 +100,27 @@
     .burger{display:block;}
   }
 
-  /* ---------- HERO ---------- */
-  @keyframes gradientShift {
-    0% { background-position: 0% 50%; }
-    50% { background-position: 100% 50%; }
-    100% { background-position: 0% 50%; }
-  }
+  /* Hero */
   .hero{
     position:relative;overflow:hidden;
-    background:
-      radial-gradient(900px 500px at 85% -10%, rgba(248,184,16,.2), transparent 60%),
-      radial-gradient(700px 500px at -10% 110%, rgba(62,143,92,.15), transparent 60%),
-      var(--cream);
-    background-size: 200% 200%;
-    animation: gradientShift 15s ease infinite;
-    padding:80px 0 60px;
+    background: radial-gradient(900px 500px at 85% -10%, rgba(248,184,16,.2), transparent 60%), radial-gradient(700px 500px at -10% 110%, rgba(62,143,92,.15), transparent 60%), var(--cream);
+    background-size: 200% 200%; animation: gradientShift 15s ease infinite; padding:80px 0 60px;
   }
-  .hero-grid{
-    display:grid;grid-template-columns:1.05fr 0.95fr;gap:48px;align-items:center;
-  }
+  .hero-grid{ display:grid;grid-template-columns:1.05fr 0.95fr;gap:48px;align-items:center; }
   .badge-row{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:22px;}
   .pill{
-    display:inline-flex;align-items:center;gap:6px;
-    background:var(--white);border:1px solid var(--steel-line);
-    padding:7px 13px;border-radius:999px;font-size:12.5px;font-weight:700;color:var(--navy);
-    box-shadow: 0 2px 10px rgba(0,0,0,0.02);
+    display:inline-flex;align-items:center;gap:6px; background:var(--white);border:1px solid var(--steel-line);
+    padding:7px 13px;border-radius:999px;font-size:12.5px;font-weight:700;color:var(--navy); box-shadow: 0 2px 10px rgba(0,0,0,0.02);
   }
   .pill svg{width:14px;height:14px;color:var(--leaf-deep);}
   .pill-heart svg{color:var(--chili); fill:var(--chili);}
-  
   .hero h1{font-size:clamp(38px,5vw,62px);font-weight:800;color:var(--navy-deep); letter-spacing:-0.5px; text-transform: uppercase;}
   .hero h1 .accent{color:var(--gold-deep);position:relative;white-space:nowrap;}
   .hero-sub{margin-top:18px;font-size:18px;line-height:1.6;color:var(--ink-soft);max-width:46ch; font-weight: 600;}
   .hero-actions{display:flex;gap:14px;margin-top:30px;flex-wrap:wrap;}
   .btn{
-    display:inline-flex;align-items:center;gap:9px;
-    padding:16px 28px;border-radius:14px;font-weight:800;font-size:15px;
-    border:2px solid transparent;transition: var(--transition-smooth);
+    display:inline-flex;align-items:center;gap:9px; padding:16px 28px;border-radius:14px;font-weight:800;font-size:15px;
+    border:2px solid transparent;transition: var(--transition-smooth); cursor:pointer;
   }
   .btn svg{width:19px;height:19px;}
   .btn-whatsapp{background:var(--whatsapp);color:#fff;box-shadow:0 10px 24px -10px rgba(37,211,102,.6);}
@@ -181,62 +130,48 @@
   .hero-trust{display:flex;align-items:center;gap:14px;margin-top:32px;}
   .avatar-stack{display:flex;}
   .avatar-stack span{
-    width:34px;height:34px;border-radius:50%;border:2px solid var(--cream);
-    display:flex;align-items:center;justify-content:center;font-family:var(--font-display);
-    font-weight:700;font-size:13px;color:#fff;margin-left:-10px;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    width:34px;height:34px;border-radius:50%;border:2px solid var(--cream); display:flex;align-items:center;justify-content:center;
+    font-family:var(--font-display); font-weight:700;font-size:13px;color:#fff;margin-left:-10px; box-shadow: 0 4px 10px rgba(0,0,0,0.1);
   }
   .avatar-stack span:first-child{margin-left:0;}
   .hero-trust-text{font-size:13.5px;color:var(--ink-soft);font-weight:600;}
-  .hero-trust-text strong{color:var(--navy-deep);}
-
-  /* Hero illustration: tiffin stack + scooter route */
+  
   .hero-art{position:relative;display:flex;justify-content:center;align-items:center; animation: float 6s ease-in-out infinite;}
-  @keyframes float {
-    0% { transform: translateY(0px); }
-    50% { transform: translateY(-15px); }
-    100% { transform: translateY(0px); }
-  }
+  @keyframes float { 0% { transform: translateY(0px); } 50% { transform: translateY(-15px); } 100% { transform: translateY(0px); } }
   .hero-art svg{width:100%;max-width:420px; filter: drop-shadow(0 20px 30px rgba(18,54,85,0.15));}
 
-  /* ---------- MARQUEE ---------- */
   .marquee{
-    background:var(--leaf-deep);color:#fff;overflow:hidden;padding:13px 0;
-    border-top:1px solid rgba(255,255,255,.08);border-bottom:1px solid rgba(255,255,255,.08);
+    background:var(--leaf-deep);color:#fff;overflow:hidden;padding:13px 0; border-top:1px solid rgba(255,255,255,.08);border-bottom:1px solid rgba(255,255,255,.08);
   }
   .marquee-track{display:flex;width:max-content;animation:scroll 26s linear infinite;}
   .marquee-track span{
-    display:inline-flex;align-items:center;gap:10px;padding:0 28px;
-    font-family:var(--font-mono);font-size:13px;letter-spacing:.06em;text-transform:uppercase;font-weight:600;color:#FBEBD1;white-space:nowrap;
+    display:inline-flex;align-items:center;gap:10px;padding:0 28px; font-family:var(--font-mono);font-size:13px;
+    letter-spacing:.06em;text-transform:uppercase;font-weight:600;color:#FBEBD1;white-space:nowrap;
   }
   .marquee-track span::after{content:"•";color:var(--gold);margin-left:28px;}
   @keyframes scroll{from{transform:translateX(0);}to{transform:translateX(-50%);}}
-  @media (prefers-reduced-motion: reduce){.marquee-track{animation:none;}}
 
-  /* ---------- SECTION shells ---------- */
   section{padding:100px 0;}
   .section-head{max-width:640px;margin-bottom:56px;}
   .section-head h2{font-size:clamp(32px,4vw,42px);margin-top:12px;font-weight:800; letter-spacing: -0.5px;}
   .section-head p{margin-top:16px;font-size:16.5px;color:var(--ink-soft);line-height:1.6;}
   .section-alt{background:var(--white);}
   
-  /* ---------- SERVICES ---------- */
+  /* Services */
   .services-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;}
   .service-card{
     background:var(--white);border:1px solid var(--steel-line);border-radius:var(--radius);
-    padding:32px 28px;transition: var(--transition-smooth);
-    position: relative; overflow: hidden;
+    padding:32px 28px;transition: var(--transition-smooth); position: relative; overflow: hidden;
   }
   .service-card::before {
     content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 4px;
-    background: var(--gold-deep); transform: scaleX(0); transform-origin: left; transition: transform 0.3s ease;
+    background: var(--gold-deep); transform: scaleX(0); transform-origin: left; transition: transform 0.4s ease;
   }
   .service-card:hover::before { transform: scaleX(1); }
-  .service-card:hover{transform:translateY(-8px);box-shadow:var(--shadow);border-color:transparent;}
+  .service-card:hover{transform:translateY(-8px) scale(1.02); box-shadow:var(--shadow); border-color:transparent;}
   .service-icon{
     width:56px;height:56px;border-radius:14px;background:var(--steel);
-    display:flex;align-items:center;justify-content:center;margin-bottom:20px;
-    transition: var(--transition-smooth);
+    display:flex;align-items:center;justify-content:center;margin-bottom:20px; transition: var(--transition-smooth);
   }
   .service-card:hover .service-icon { transform: scale(1.1) rotate(5deg); }
   .service-icon svg{width:26px;height:26px;color:var(--leaf-deep);}
@@ -246,23 +181,16 @@
   .service-card h3{font-size:19px;font-weight:700;margin-bottom:8px;}
   .service-card p{font-size:15px;color:var(--ink-soft);line-height:1.6;}
 
-  /* ---------- AREAS ---------- */
+  /* Areas */
   .areas-layout{display:grid;grid-template-columns:1.15fr 0.85fr;gap:36px;}
-  .area-card{
-    background:var(--white);border-radius:var(--radius);border:1px solid var(--steel-line);padding:36px;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.02);
-  }
+  .area-card{ background:var(--white);border-radius:var(--radius);border:1px solid var(--steel-line);padding:36px; box-shadow: 0 4px 15px rgba(0,0,0,0.02); }
   .area-card h3{font-size:24px;font-weight:800;margin-bottom:6px; color:var(--navy-deep);}
   .area-card .school-tag{
     font-family:var(--font-mono);font-size:12px;color:#fff;background:var(--navy-deep);
-    padding:4px 12px;border-radius:999px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;
-    display:inline-block; margin-bottom:12px;
+    padding:4px 12px;border-radius:999px;font-weight:600;text-transform:uppercase;letter-spacing:.06em; display:inline-block; margin-bottom:12px;
   }
   .route-list{list-style:none;margin:20px 0 0;padding:0;display:grid;grid-template-columns:1fr 1fr;gap:0;}
-  .route-list li{
-    display:flex;align-items:center;gap:12px;padding:12px 0;font-weight:700;font-size:15px;
-    border-bottom:1px dashed var(--steel-line); transition: color 0.2s;
-  }
+  .route-list li{ display:flex;align-items:center;gap:12px;padding:12px 0;font-weight:700;font-size:15px; border-bottom:1px dashed var(--steel-line); transition: color 0.2s; }
   .route-list li:hover { color: var(--gold-deep); cursor: default; }
   .route-list li svg{width:18px;height:18px;color:var(--leaf-deep);flex-shrink:0;}
   .also-serve{background:var(--navy-deep);color:#fff;}
@@ -273,7 +201,7 @@
   .also-serve .route-list li svg{color:var(--chili);}
   .also-serve .route-list{grid-template-columns:1fr;}
 
-  /* ---------- WHY + PAYMENT ---------- */
+  /* Why Us */
   .split{display:grid;grid-template-columns:1.2fr 0.8fr;gap:40px;}
   .why-list{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:20px;}
   .why-list li{display:flex;gap:16px;align-items:center;font-weight:700;font-size:17px; color:var(--navy-deep);}
@@ -281,7 +209,6 @@
     width:28px;height:28px;color:var(--white);background:var(--leaf-deep);
     border-radius:50%;padding:5px;flex-shrink:0;box-shadow: 0 4px 10px rgba(46,110,69,0.3);
   }
-  
   .pay-card{
     background:var(--white);border-radius:var(--radius);border:1px solid var(--steel-line);
     padding:36px; box-shadow: var(--shadow); display:flex; flex-direction:column; justify-content:center;
@@ -292,32 +219,18 @@
     text-transform:uppercase; letter-spacing:1px; margin-bottom:24px;
   }
   .pay-options{display:flex;flex-direction:column;gap:16px;}
-  .pay-opt{
-    border:1px solid var(--steel-line);border-radius:14px;padding:22px; 
-    transition: var(--transition-smooth); background:var(--cream);
-  }
-  .pay-opt:hover { border-color: var(--gold-deep); transform: translateY(-3px); box-shadow: 0 8px 20px rgba(232,163,61,0.1); background:#fff;}
+  .pay-opt{ border:1px solid var(--steel-line);border-radius:14px;padding:22px; transition: var(--transition-smooth); background:var(--cream); }
+  .pay-opt:hover { border-color: var(--gold-deep); transform: translateY(-4px) scale(1.02); box-shadow: 0 12px 24px rgba(232,163,61,0.15); background:#fff;}
   .pay-opt h4{font-family:var(--font-display);font-size:17px;margin-bottom:12px; display:flex; align-items:center; justify-content:space-between;}
   .pay-opt p{font-size:14px;color:var(--ink-soft); line-height:1.5;}
-  
-  /* Payment Logos (CSS styled text to mimic logos) */
   .payment-logos { display:flex; gap:12px; flex-wrap:wrap; margin-top:14px; align-items:center; }
-  .pay-logo { 
-    background:#fff; border:1px solid var(--steel-line); border-radius:6px; 
-    padding:4px 10px; font-size:12px; font-weight:800; display:flex; align-items:center; gap:4px;
-  }
-  .logo-gpay { color: #5F6368; }
-  .logo-gpay span { color: #EA4335; }
-  .logo-gpay span:nth-child(2) { color: #FBBC04; }
-  .logo-gpay span:nth-child(3) { color: #34A853; }
-  .logo-gpay span:nth-child(4) { color: #4285F4; }
-  .logo-paytm { color: #002970; }
-  .logo-paytm span { color: #00BAF2; }
-  .logo-phonepay { color: #5F259F; font-family: sans-serif; letter-spacing:-0.5px;}
-  .logo-upi { color: #000; font-style:italic; border-color:#FF7D00; }
-  .logo-upi span { color: #007A33; }
+  .pay-logo { background:#fff; border:1px solid var(--steel-line); border-radius:6px; padding:4px 10px; font-size:12px; font-weight:800; display:flex; align-items:center; gap:4px; }
+  .logo-gpay { color: #5F6368; } .logo-gpay span:nth-child(1) { color: #EA4335; } .logo-gpay span:nth-child(2) { color: #FBBC04; } .logo-gpay span:nth-child(3) { color: #34A853; } .logo-gpay span:nth-child(4) { color: #4285F4; }
+  .logo-paytm { color: #002970; } .logo-paytm span { color: #00BAF2; }
+  .logo-phonepe { color: #5F259F; font-family: sans-serif; letter-spacing:-0.5px;}
+  .logo-upi { color: #000; font-style:italic; border-color:#FF7D00; } .logo-upi span { color: #007A33; }
 
-  /* ---------- REVIEWS ---------- */
+  /* Reviews */
   .reviews-top{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:24px;margin-bottom:40px;}
   .rating-summary{display:flex;align-items:center;gap:20px;}
   .rating-num{font-family:var(--font-display);font-size:56px;font-weight:800;color:var(--navy-deep);}
@@ -326,7 +239,7 @@
   .star-fill{color:var(--gold-deep);}
   .star-empty{color:var(--steel-line);}
   .rating-meta p{font-size:14px;color:var(--ink-soft);font-weight:600;}
-  .reviews-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-bottom:56px;}
+  .reviews-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-bottom:30px;}
   .review-card{
     background:var(--white);border:1px solid var(--steel-line);border-radius:var(--radius);padding:28px;
     display:flex;flex-direction:column;gap:14px; transition: var(--transition-smooth);
@@ -340,47 +253,71 @@
   .review-name{font-weight:800;font-size:16px;}
   .review-sub{font-size:13px;color:var(--ink-soft);font-family:var(--font-mono);}
   .review-text{font-size:15px;color:var(--ink-soft);line-height:1.6; font-style: italic;}
+  
+  /* Skeleton Loader */
+  .skeleton { background: #f0f0f0; background: linear-gradient(110deg, #ececec 8%, #f5f5f5 18%, #ececec 33%); background-size: 200% 100%; animation: 1.5s shimmer linear infinite; border-radius: 8px; }
+  .sk-avatar { width: 48px; height: 48px; border-radius: 50%; }
+  .sk-text { height: 14px; margin-bottom: 8px; }
+  .sk-text.w50 { width: 50%; } .sk-text.w80 { width: 80%; } .sk-text.w100 { width: 100%; }
 
-  /* ---------- FLYER STYLE CTA BANNER ---------- */
+  .review-form-wrap{
+    background:var(--white);border:1px solid var(--steel-line);border-radius:var(--radius);
+    padding:44px;display:grid;grid-template-columns:1fr 1fr;gap:40px; box-shadow: 0 10px 30px rgba(0,0,0,0.03);
+  }
+  .review-form-wrap h3{font-size:24px;font-weight:800;margin-bottom:10px; color:var(--navy-deep);}
+  .review-form-wrap .form-intro p{color:var(--ink-soft);font-size:15px;line-height:1.6;margin-top:8px;}
+  .star-picker{display:flex;gap:8px;margin-top:20px;}
+  .star-picker button{background:none;border:0;padding:2px; cursor: pointer; transition: transform 0.2s;}
+  .star-picker svg{width:34px;height:34px;color:var(--steel-line);transition:color .2s, transform .2s;}
+  .star-picker button.active svg,.star-picker button:hover svg{color:var(--gold-deep);transform:scale(1.15);}
+  .field{margin-bottom:20px;}
+  .field label{display:block;font-size:14px;font-weight:700;margin-bottom:8px;color:var(--navy-deep);}
+  .field input, .field textarea{
+    width:100%;border:2px solid var(--steel-line);border-radius:12px;padding:14px 16px;
+    font-family:var(--font-body);font-size:15px;background:var(--cream);resize:vertical; transition: var(--transition-smooth); box-sizing: border-box;
+  }
+  .field input:focus, .field textarea:focus{border-color:var(--gold-deep);outline:none; box-shadow: 0 0 0 4px rgba(232,163,61,0.15); background: #fff;}
+  .btn-submit{
+    background:var(--navy-deep);color:#fff;border:none;padding:16px 32px;border-radius:14px;
+    font-weight:800;font-size:16px;display:inline-flex;align-items:center;gap:10px; transition: var(--transition-smooth); cursor: pointer;
+  }
+  .btn-submit:hover:not(:disabled){background:var(--navy); transform: translateY(-2px); box-shadow: 0 6px 16px rgba(18,54,85,0.2);}
+  .btn-submit:disabled{opacity: 0.6; cursor: not-allowed;}
+
+  /* CTA Banner */
   .cta-banner-wrapper { padding: 0 0 80px; }
   .cta-banner{
-    background: var(--gold); /* Bright yellow from flyer */
-    border-radius:28px;padding:48px;display:flex;align-items:center;justify-content:space-between;
-    gap:40px;flex-wrap:wrap;color:var(--navy-deep);
-    box-shadow: 0 20px 40px rgba(248,184,16,0.3);
-    position: relative; overflow: hidden;
+    background: var(--gold); border-radius:28px;padding:48px;display:flex;align-items:center;justify-content:space-between;
+    gap:40px;flex-wrap:wrap;color:var(--navy-deep); box-shadow: 0 20px 40px rgba(248,184,16,0.3); position: relative; overflow: hidden;
   }
   .cta-banner::before {
     content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
-    background: repeating-linear-gradient(45deg, transparent, transparent 20px, rgba(255,255,255,0.1) 20px, rgba(255,255,255,0.1) 40px);
-    pointer-events: none;
+    background: repeating-linear-gradient(45deg, transparent, transparent 20px, rgba(255,255,255,0.1) 20px, rgba(255,255,255,0.1) 40px); pointer-events: none;
   }
   .cta-content { z-index: 2; display: flex; align-items: center; gap: 24px; flex: 1; }
   .megaphone-icon { 
-    width: 80px; height: 80px; flex-shrink: 0; background: #fff; border-radius: 50%;
-    display: flex; align-items: center; justify-content: center; box-shadow: 0 10px 20px rgba(0,0,0,0.1);
-    transform: rotate(-10deg);
+    width: 80px; height: 80px; flex-shrink: 0; background: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.1); transform: rotate(-10deg); transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
   }
+  .cta-banner:hover .megaphone-icon { transform: rotate(15deg) scale(1.1); }
   .megaphone-icon svg { width: 44px; height: 44px; color: var(--chili); }
   .cta-banner h3{font-size:28px;font-weight:800; line-height:1.1; text-transform: uppercase;}
   .cta-banner p{margin-top:8px;font-weight:600;font-size:17px;color:#000;}
   .cta-contacts{display:flex;gap:16px;flex-wrap:wrap; z-index: 2;}
   .contact-chip{
     background:var(--navy-deep);color:#fff;padding:16px 28px;border-radius:16px;
-    display:flex;align-items:center;gap:12px;font-weight:700;font-size:16px;transition: var(--transition-smooth);
-    border: 2px solid rgba(255,255,255,0.2);
+    display:flex;align-items:center;gap:12px;font-weight:700;font-size:16px;transition: var(--transition-smooth); border: 2px solid rgba(255,255,255,0.2);
   }
-  .contact-chip:hover{transform:translateY(-4px); box-shadow: 0 10px 20px rgba(0,0,0,0.2); background: #fff; color: var(--navy-deep); border-color:#fff;}
+  .contact-chip:hover{transform:translateY(-4px) scale(1.03); box-shadow: 0 12px 24px rgba(0,0,0,0.2); background: #fff; color: var(--navy-deep); border-color:#fff;}
   .contact-chip svg{width:26px;height:26px;color:var(--whatsapp);}
   .contact-chip .who{font-family:var(--font-mono);font-size:12px;color:#B9CADA;display:block;text-transform:uppercase;letter-spacing:.05em;}
   .contact-chip:hover .who { color: var(--ink-soft); }
 
-  /* ---------- FOOTER ---------- */
+  /* Footer */
   footer{background:var(--navy-deep);color:#B9CADA;padding:0 0 30px;}
   .footer-safe-strip{
     background:var(--navy); padding: 20px; display:flex; justify-content:center; gap:40px; flex-wrap:wrap;
-    font-family:var(--font-display); font-weight:800; color:#fff; font-size:18px; text-transform:uppercase;
-    letter-spacing: 1px; margin-bottom: 60px;
+    font-family:var(--font-display); font-weight:800; color:#fff; font-size:18px; text-transform:uppercase; letter-spacing: 1px; margin-bottom: 60px;
   }
   .footer-safe-strip span{display:flex;align-items:center;gap:10px;}
   .footer-safe-strip span::after { content:'•'; color:var(--gold); margin-left:40px; }
@@ -395,58 +332,43 @@
   footer ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:12px;}
   footer ul a{font-size:15px;font-weight:600;transition:color .2s;}
   footer ul a:hover{color:var(--gold);}
-  .footer-bottom{
-    border-top:1px solid rgba(255,255,255,.08);padding-top:28px;
-    display:flex;justify-content:space-between;flex-wrap:wrap;gap:14px;font-size:13.5px;color:#7E96AB;
-  }
-
-  /* ---------- FLOATING WHATSAPP ---------- */
+  .footer-bottom{ border-top:1px solid rgba(255,255,255,.08);padding-top:28px; display:flex;justify-content:space-between;flex-wrap:wrap;gap:14px;font-size:13.5px;color:#7E96AB; }
   .float-whatsapp{
-    position:fixed;bottom:28px;right:28px;z-index:70;
-    width:64px;height:64px;border-radius:50%;background:var(--whatsapp);
-    display:flex;align-items:center;justify-content:center;box-shadow:0 12px 30px -8px rgba(37,211,102,.7);
-    animation:pulse-wa 2.6s ease-in-out infinite; transition: var(--transition-smooth);
+    position:fixed;bottom:28px;right:28px;z-index:70; width:64px;height:64px;border-radius:50%;background:var(--whatsapp);
+    display:flex;align-items:center;justify-content:center;box-shadow:0 12px 30px -8px rgba(37,211,102,.7); animation:pulse-wa 2.6s ease-in-out infinite; transition: var(--transition-smooth);
   }
   .float-whatsapp:hover { transform: scale(1.1); animation: none; box-shadow:0 16px 36px -8px rgba(37,211,102,.9); }
   .float-whatsapp svg{width:34px;height:34px;color:#fff;}
   @keyframes pulse-wa{0%,100%{transform:scale(1);}50%{transform:scale(1.08); box-shadow:0 16px 36px -8px rgba(37,211,102,.8);}}
 
   @media (max-width:940px){
-    .hero-grid{grid-template-columns:1fr;}
-    .hero-art{order:-1;max-width:320px;margin:0 auto;}
-    .services-grid{grid-template-columns:1fr 1fr;}
-    .areas-layout{grid-template-columns:1fr;}
-    .split{grid-template-columns:1fr;}
-    .reviews-grid{grid-template-columns:1fr 1fr;}
-    .cta-content { flex-direction: column; text-align: center; }
-    .footer-safe-strip { gap: 20px; }
-    .footer-safe-strip span::after { margin-left: 20px; }
+    .hero-grid{grid-template-columns:1fr;} .hero-art{order:-1;max-width:320px;margin:0 auto;}
+    .services-grid{grid-template-columns:1fr 1fr;} .areas-layout{grid-template-columns:1fr;}
+    .split{grid-template-columns:1fr;} .reviews-grid{grid-template-columns:1fr 1fr;}
+    .review-form-wrap{grid-template-columns:1fr;} .cta-content { flex-direction: column; text-align: center; }
+    .footer-safe-strip { gap: 20px; } .footer-safe-strip span::after { margin-left: 20px; }
   }
   @media (max-width:600px){
-    section{padding:70px 0;}
-    .services-grid{grid-template-columns:1fr;}
-    .route-list{grid-template-columns:1fr;}
-    .reviews-grid{grid-template-columns:1fr;}
-    .cta-banner{padding:36px 24px;}
-    .footer-grid{grid-template-columns:1fr;}
-    .footer-safe-strip { flex-direction: column; align-items: center; }
-    .footer-safe-strip span::after { display: none; }
+    section{padding:70px 0;} .services-grid{grid-template-columns:1fr;} .route-list{grid-template-columns:1fr;}
+    .reviews-grid{grid-template-columns:1fr;} .review-form-wrap{padding:24px;} .cta-banner{padding:36px 24px;}
+    .footer-grid{grid-template-columns:1fr;} .footer-safe-strip { flex-direction: column; align-items: center; } .footer-safe-strip span::after { display: none; }
   }
 </style>
 </head>
 <body>
 <div id="scroll-progress"></div>
+<div id="toast">
+  <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+  Review posted successfully!
+</div>
 
-<!-- ============ NAV ============ -->
 <header class="site-nav" id="main-nav">
   <div class="nav-inner">
     <a href="#top" class="brand" aria-label="Lunchtime Express home">
-      <!-- Added chef hat flair to the logo SVG to match flyer -->
       <svg viewBox="0 0 64 64" class="logo-mark" aria-hidden="true">
         <circle cx="32" cy="32" r="31" fill="#123655"/>
         <rect x="16" y="28" width="32" height="22" rx="6" fill="#F8B810"/>
         <rect x="16" y="28" width="32" height="6" rx="3" fill="#E8A33D"/>
-        <!-- Chef Hat -->
         <path d="M22 28 Q22 18 27 18 Q29 12 32 12 Q35 12 37 18 Q42 18 42 28 Z" fill="#EDF3F6"/>
         <circle cx="26" cy="40" r="2.6" fill="#123655"/>
         <circle cx="38" cy="40" r="2.6" fill="#123655"/>
@@ -473,14 +395,12 @@
   </div>
 </header>
 
-<!-- ============ HERO ============ -->
 <main id="top">
 <section class="hero">
   <div class="wrap hero-grid">
     <div class="reveal">
       <div class="badge-row">
         <span class="pill"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M20 6 9 17l-5-5" stroke-linecap="round" stroke-linejoin="round"/></svg>Trusted by Parents</span>
-        <!-- Added Flyer Specific Badge -->
         <span class="pill pill-heart"><svg viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>Loved by Students!</span>
       </div>
       <h1>NO MORE LUNCH TENSION —<br><span class="accent">PARENTS RELAX!</span></h1>
@@ -533,7 +453,6 @@
   </div>
 </div>
 
-<!-- ============ SERVICES ============ -->
 <section id="services">
   <div class="wrap">
     <div class="section-head reveal">
@@ -541,48 +460,40 @@
       <h2>Everything between your kitchen and their classroom.</h2>
     </div>
     <div class="services-grid">
-
       <div class="service-card reveal">
         <div class="service-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 12h16M4 12a8 8 0 0 1 16 0M4 12v1a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-1" stroke-linecap="round"/><path d="M8 20h8" stroke-linecap="round"/></svg></div>
         <h3>Fresh Home Tiffin Delivered Daily</h3>
         <p>Picked up straight from your kitchen every school morning.</p>
       </div>
-
       <div class="service-card reveal" style="transition-delay: 0.1s;">
         <div class="service-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2 4 6v6c0 5 3.5 8.5 8 10 4.5-1.5 8-5 8-10V6l-8-4Z" stroke-linejoin="round"/><path d="m9 12 2 2 4-4" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
         <h3>Safe &amp; Hygienic Handling</h3>
         <p>Sealed carriers and a strict no-contamination rule from pickup to classroom.</p>
       </div>
-
       <div class="service-card featured reveal" style="transition-delay: 0.2s;">
         <div class="service-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 2" stroke-linecap="round"/></svg></div>
         <h3>On-Time School Delivery</h3>
         <p>Timed to your child's lunch bell — not before it goes cold, not after they're hungry.</p>
       </div>
-
       <div class="service-card reveal">
         <div class="service-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 21v-2a4 4 0 0 1 4-4h2a4 4 0 0 1 4 4v2" stroke-linecap="round"/><circle cx="9" cy="7" r="3"/><path d="M17 21v-1.5a3.5 3.5 0 0 0-2-3.16M14 4.2a3 3 0 0 1 0 5.6" stroke-linecap="round"/></svg></div>
         <h3>Direct Classroom Coordination</h3>
         <p>Handed directly to school staff or your child, right on time.</p>
       </div>
-
       <div class="service-card reveal" style="transition-delay: 0.1s;">
         <div class="service-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 12.5 11 15l4.5-5" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 3 4 6v6c0 5 3.5 8.5 8 10 4.5-1.5 8-5 8-10V6l-8-3Z" stroke-linejoin="round"/></svg></div>
         <h3>Verified Delivery</h3>
         <p>Background-checked, uniformed riders your child learns to recognise.</p>
       </div>
-
       <div class="service-card reveal" style="transition-delay: 0.2s;">
         <div class="service-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="6" width="18" height="13" rx="2"/><path d="M3 10h18M7 15h4" stroke-linecap="round"/></svg></div>
         <h3>Affordable Monthly Plans</h3>
         <p>One simple rate per child — online and cash payment available.</p>
       </div>
-
     </div>
   </div>
 </section>
 
-<!-- ============ AREAS ============ -->
 <section id="areas" class="section-alt">
   <div class="wrap">
     <div class="section-head reveal">
@@ -620,7 +531,6 @@
   </div>
 </section>
 
-<!-- ============ WHY + PAYMENT ============ -->
 <section id="why-us">
   <div class="wrap">
     <div class="split">
@@ -645,10 +555,9 @@
           <div class="pay-opt">
             <h4>Online Payment</h4>
             <p>Settle instantly using your preferred digital wallet or UPI app.</p>
-            <!-- Integrated CSS-styled payment provider logos -->
             <div class="payment-logos">
               <span class="pay-logo logo-gpay">G<span>P</span><span>a</span><span>y</span></span>
-              <span class="pay-logo logo-phonepe">phonepe</span>
+              <span class="pay-logo logo-phonepe">PhonePe</span>
               <span class="pay-logo logo-paytm">Pay<span>tm</span></span>
               <span class="pay-logo logo-upi">UPI<span>&rlhar;</span></span>
             </div>
@@ -663,19 +572,74 @@
   </div>
 </section>
 
-<!-- ============ REVIEWS ============ -->
 <section id="reviews" class="section-alt">
   <div class="wrap">
     <div class="section-head reveal">
       <span class="eyebrow">Parent reviews</span>
       <h2>What families on our route are saying.</h2>
+      <p>Real feedback from parents currently on a Lunchtime Express plan. Add your own below.</p>
     </div>
 
-    <div class="reviews-grid reveal" id="reviews-grid"></div>
+    <div class="reviews-top reveal">
+      <div class="rating-summary">
+        <span class="rating-num" id="avg-rating">--</span>
+        <div>
+          <div class="stars" id="avg-stars"></div>
+          <div class="rating-meta"><p id="review-count">Loading reviews...</p></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="reviews-grid reveal" id="reviews-grid">
+      <div class="review-card skeleton" style="border:none; height:180px;"></div>
+      <div class="review-card skeleton" style="border:none; height:180px; transition-delay:0.1s;"></div>
+      <div class="review-card skeleton" style="border:none; height:180px; transition-delay:0.2s;"></div>
+    </div>
+
+    <div class="reveal" style="text-align: center; margin-bottom: 48px;">
+      <a href="reviews.html" class="btn btn-ghost" style="border: 2px solid var(--steel-line); border-radius: 999px;">
+        Show all reviews 
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
+    </div>
+
+    <div class="review-form-wrap reveal">
+      <div class="form-intro">
+        <h3>Share your experience</h3>
+        <p>Tell other parents how delivery has gone for your child. Your review appears on this page right away.</p>
+      </div>
+      <form id="review-form" novalidate>
+        <div class="field">
+          <label for="rv-name">Your name</label>
+          <input id="rv-name" type="text" placeholder="e.g. Sudipta Ghosh" required>
+        </div>
+        <div class="field">
+          <label for="rv-area">Your area (optional)</label>
+          <input id="rv-area" type="text" placeholder="e.g. Ballygunge parent">
+        </div>
+        <div class="field">
+          <label>Rating</label>
+          <div class="star-picker" id="star-picker" role="radiogroup" aria-label="Rating out of 5">
+            <button type="button" data-val="1" aria-label="1 star"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87L18.18 21 12 17.77 5.82 21 7 14.14l-5-4.87 6.91-1.01L12 2z"/></svg></button>
+            <button type="button" data-val="2" aria-label="2 stars"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87L18.18 21 12 17.77 5.82 21 7 14.14l-5-4.87 6.91-1.01L12 2z"/></svg></button>
+            <button type="button" data-val="3" aria-label="3 stars"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87L18.18 21 12 17.77 5.82 21 7 14.14l-5-4.87 6.91-1.01L12 2z"/></svg></button>
+            <button type="button" data-val="4" aria-label="4 stars"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87L18.18 21 12 17.77 5.82 21 7 14.14l-5-4.87 6.91-1.01L12 2z"/></svg></button>
+            <button type="button" data-val="5" aria-label="5 stars"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87L18.18 21 12 17.77 5.82 21 7 14.14l-5-4.87 6.91-1.01L12 2z"/></svg></button>
+          </div>
+        </div>
+        <div class="field">
+          <label for="rv-text">Your review</label>
+          <textarea id="rv-text" rows="4" placeholder="How has delivery been for your child?" required></textarea>
+        </div>
+        <button type="submit" class="btn-submit" id="submit-btn">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M22 2 11 13M22 2 15 22l-4-9-9-4 20-7Z" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Post review
+        </button>
+      </form>
+    </div>
   </div>
 </section>
 
-<!-- ============ CTA BANNER (Flyer Megaphone Style) ============ -->
 <section id="contact" class="cta-banner-wrapper">
   <div class="wrap">
     <div class="cta-banner reveal">
@@ -703,7 +667,6 @@
 </section>
 </main>
 
-<!-- ============ FOOTER ============ -->
 <footer>
   <div class="footer-safe-strip">
     <span>SAFE <svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="10"/><path d="M9 12l2 2 4-4" stroke="var(--navy-deep)" stroke-width="2" fill="none"/></svg></span>
@@ -750,83 +713,154 @@
   </div>
 </footer>
 
-<!-- ============ FLOATING WHATSAPP ============ -->
 <a class="float-whatsapp" href="https://wa.me/919123069699?text=Hi%20Lunchtime%20Express%2C%20I%27d%20like%20to%20order%20a%20tiffin%20plan." target="_blank" rel="noopener" aria-label="Order on WhatsApp">
   <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.87.5 3.62 1.44 5.13L2 22l5.1-1.53a9.9 9.9 0 0 0 4.94 1.32h.01c5.46 0 9.91-4.45 9.91-9.91C21.96 6.45 17.5 2 12.04 2Zm0 18.04a8.1 8.1 0 0 1-4.13-1.13l-.3-.18-3.03.91.91-2.96-.19-.3a8.13 8.13 0 1 1 6.74 3.66Zm4.47-6.09c-.24-.12-1.44-.71-1.66-.79-.22-.08-.39-.12-.55.12-.16.24-.63.79-.78.95-.14.16-.29.18-.53.06-.24-.12-1.03-.38-1.96-1.21-.72-.64-1.21-1.44-1.35-1.68-.14-.24-.02-.37.11-.49.11-.11.24-.29.36-.43.12-.14.16-.24.24-.4.08-.16.04-.3-.02-.42-.06-.12-.55-1.33-.76-1.82-.2-.48-.4-.42-.55-.42-.14-.01-.3-.01-.46-.01-.16 0-.42.06-.64.3-.22.24-.84.82-.84 2s.86 2.32.98 2.48c.12.16 1.7 2.6 4.13 3.64.58.25 1.03.4 1.38.51.58.18 1.11.16 1.53.1.47-.07 1.44-.59 1.64-1.16.2-.57.2-1.06.14-1.16-.06-.1-.22-.16-.46-.28Z"/></svg>
 </a>
 
-<script>
-// Scroll Progress Bar & Sticky Header
-window.addEventListener('scroll', () => {
-  const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
-  const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
-  const scrolled = (winScroll / height) * 100;
-  document.getElementById('scroll-progress').style.width = scrolled + "%";
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
+  import { getFirestore, collection, addDoc, getDocs, query, orderBy, limit, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
 
-  const header = document.getElementById('main-nav');
-  if (winScroll > 50) {
-    header.classList.add('scrolled');
-  } else {
-    header.classList.remove('scrolled');
-  }
-});
+  const firebaseConfig = {
+    apiKey: "AIzaSyAIjOf3KcuVULDtOH6dd17zatfQZEGa5rw",
+    authDomain: "lunchtime-ffe98.firebaseapp.com",
+    projectId: "lunchtime-ffe98",
+    storageBucket: "lunchtime-ffe98.firebasestorage.app",
+    messagingSenderId: "135182082883",
+    appId: "1:135182082883:web:9292f6e1dcff9360ee05f6",
+    measurementId: "G-91DB7QRFYS"
+  };
 
-// Scroll Reveal Animations
-const observerOptions = {
-  root: null,
-  rootMargin: '0px',
-  threshold: 0.15
-};
-const observer = new IntersectionObserver((entries, observer) => {
-  entries.forEach(entry => {
-    if(entry.isIntersecting) {
-      entry.target.classList.add('active');
-      observer.unobserve(entry.target); 
-    }
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+
+  /* --- UI Helpers --- */
+  window.addEventListener('scroll', () => {
+    const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+    const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+    document.getElementById('scroll-progress').style.width = (winScroll / height) * 100 + "%";
+    const header = document.getElementById('main-nav');
+    winScroll > 50 ? header.classList.add('scrolled') : header.classList.remove('scrolled');
   });
-}, observerOptions);
 
-document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+  const observer = new IntersectionObserver((entries, obs) => {
+    entries.forEach(entry => { if(entry.isIntersecting) { entry.target.classList.add('active'); obs.unobserve(entry.target); } });
+  }, { threshold: 0.15 });
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+  document.getElementById('year').textContent = new Date().getFullYear();
 
-document.getElementById('year').textContent = new Date().getFullYear();
-const STAR_PATH = 'M12 2l3.09 6.26L22 9.27l-5 4.87L18.18 21 12 17.77 5.82 21 7 14.14l-5-4.87 6.91-1.01L12 2z';
-
-function starsSVG(count, size){
-  size = size || 14;
-  let html = '';
-  for(let i=1;i<=5;i++){
-    const cls = i<=count ? 'star-fill' : 'star-empty';
-    html += `<svg viewBox="0 0 24 24" fill="currentColor" class="${cls}" width="${size}" height="${size}"><path d="${STAR_PATH}"/></svg>`;
+  function starsSVG(count, size=14){
+    const path = 'M12 2l3.09 6.26L22 9.27l-5 4.87L18.18 21 12 17.77 5.82 21 7 14.14l-5-4.87 6.91-1.01L12 2z';
+    let html = '';
+    for(let i=1;i<=5;i++) html += `<svg viewBox="0 0 24 24" fill="currentColor" class="${i<=count ? 'star-fill' : 'star-empty'}" width="${size}" height="${size}"><path d="${path}"/></svg>`;
+    return html;
   }
-  return html;
-}
+  const avatarColors = ['#3E8F5C','#E8A33D','#D8503A', '#123655', '#2E6E45'];
+  function initials(name){ return name.trim().split(/\s+/).slice(0,2).map(w=>w[0].toUpperCase()).join(''); }
+  function escapeHTML(str){ const div = document.createElement('div'); div.textContent = str; return div.innerHTML; }
+  
+  function showToast(msg) {
+    const toast = document.getElementById('toast');
+    toast.innerHTML = `<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5" stroke-linecap="round" stroke-linejoin="round"/></svg> ${msg}`;
+    toast.classList.add('show');
+    setTimeout(() => toast.classList.remove('show'), 3500);
+  }
 
-const seedReviews = [
-  {name:"Ritwika Sen", area:"Ballygunge parent", rating:5, text:"My daughter's lunch reaches her hot and right on time every single day. The rider even waits if her class is running a minute late."},
-  {name:"Pritam Dasgupta", area:"Jadavpur parent", rating:5, text:"Switched from a tiffin service that kept skipping days. Lunchtime Express hasn't missed once in four months."},
-  {name:"Amitava Roy", area:"Kalighat parent", rating:5, text:"The riders are polite and always in uniform. My son recognises 'Lunchtime bhaiya' from a mile away now."}
-];
+  // Initial Seed Data (Fallbacks in case DB is completely empty)
+  const seedReviews = [
+    {name:"Ritwika Sen", area:"Ballygunge parent", rating:5, text:"My daughter's lunch reaches her hot and right on time every single day. The rider even waits if her class is running a minute late."},
+    {name:"Pritam Dasgupta", area:"Jadavpur parent", rating:5, text:"Switched from a tiffin service that kept skipping days. Lunchtime Express hasn't missed once in four months."},
+    {name:"Amitava Roy", area:"Kalighat parent", rating:5, text:"The riders are polite and always in uniform. My son recognises 'Lunchtime bhaiya' from a mile away now."}
+  ];
 
-const avatarColors = ['#3E8F5C','#E8A33D','#D8503A'];
-function initials(name){ return name.trim().split(/\s+/).slice(0,2).map(w=>w[0].toUpperCase()).join(''); }
+  /* --- Firebase Fetching --- */
+  async function fetchAndRenderReviews() {
+    try {
+      const q = query(collection(db, "reviews"), orderBy("createdAt", "desc"), limit(3));
+      const querySnapshot = await getDocs(q);
+      
+      let reviews = [];
+      querySnapshot.forEach((doc) => { reviews.push(doc.data()); });
+      
+      if(reviews.length === 0) reviews = seedReviews; // Use seeds if DB is empty
 
-function renderReviews(){
-  const grid = document.getElementById('reviews-grid');
-  grid.innerHTML = seedReviews.map((r,i)=>`
-    <div class="review-card">
-      <div class="review-head">
-        <div class="review-avatar" style="background:${avatarColors[i % avatarColors.length]}">${initials(r.name)}</div>
-        <div>
-          <div class="review-name">${r.name}</div>
-          <div class="review-sub">${r.area}</div>
+      const grid = document.getElementById('reviews-grid');
+      grid.innerHTML = reviews.map((r,i)=>`
+        <div class="review-card" style="animation: float 6s ease-in-out infinite; animation-delay: ${i*0.2}s">
+          <div class="review-head">
+            <div class="review-avatar" style="background:${avatarColors[i % avatarColors.length]}">${initials(r.name)}</div>
+            <div><div class="review-name">${escapeHTML(r.name)}</div><div class="review-sub">${escapeHTML(r.area || 'Verified parent')}</div></div>
+          </div>
+          <div class="stars">${starsSVG(r.rating,16)}</div>
+          <p class="review-text">"${escapeHTML(r.text)}"</p>
         </div>
-      </div>
-      <div class="stars">${starsSVG(r.rating,16)}</div>
-      <p class="review-text">"${r.text}"</p>
-    </div>
-  `).join('');
-}
-renderReviews();
+      `).join('');
+
+      // Simple avg calculation (assuming global avg based on fetched/seeds)
+      const avg = reviews.reduce((s,r)=>s+Number(r.rating),0) / reviews.length;
+      document.getElementById('avg-rating').textContent = avg.toFixed(1);
+      document.getElementById('avg-stars').innerHTML = starsSVG(Math.round(avg),22);
+      document.getElementById('review-count').textContent = `Showing latest ${reviews.length} reviews`;
+      
+    } catch (e) {
+      console.error("Error fetching reviews: ", e);
+      document.getElementById('reviews-grid').innerHTML = '<p style="grid-column:1/-1; text-align:center;">Could not load reviews at this time.</p>';
+    }
+  }
+
+  fetchAndRenderReviews();
+
+  /* --- Interactive Star Picker --- */
+  let selectedRating = 0;
+  const starButtons = document.querySelectorAll('#star-picker button');
+  starButtons.forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      selectedRating = Number(btn.dataset.val);
+      starButtons.forEach(b=> b.classList.toggle('active', Number(b.dataset.val) <= selectedRating));
+    });
+  });
+
+  /* --- Firebase Submitting --- */
+  const reviewForm = document.getElementById('review-form');
+  if (reviewForm) {
+    reviewForm.addEventListener('submit', async function(e){
+      e.preventDefault();
+      const btn = document.getElementById('submit-btn');
+      const name = document.getElementById('rv-name').value.trim();
+      const area = document.getElementById('rv-area').value.trim();
+      const text = document.getElementById('rv-text').value.trim();
+
+      if(!name || !text || selectedRating === 0){
+        showToast('Please fill out all fields and select a star rating.');
+        return;
+      }
+
+      btn.disabled = true;
+      btn.innerHTML = 'Posting...';
+
+      try {
+        await addDoc(collection(db, "reviews"), {
+          name: name,
+          area: area,
+          rating: selectedRating,
+          text: text,
+          createdAt: serverTimestamp()
+        });
+        
+        reviewForm.reset();
+        selectedRating = 0;
+        starButtons.forEach(b=>b.classList.remove('active'));
+        showToast('Thanks! Your review has been securely posted.');
+        fetchAndRenderReviews(); // Reload the grid
+      } catch (e) {
+        console.error("Error adding document: ", e);
+        showToast('Error posting review. Please try again.');
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M22 2 11 13M22 2 15 22l-4-9-9-4 20-7Z" stroke-linecap="round" stroke-linejoin="round"/></svg> Post review';
+      }
+    });
+  }
 </script>
 </body>
 </html>
